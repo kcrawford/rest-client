@@ -88,20 +88,29 @@ module RestClient
     attr_accessor :proxy
   end
 
-  # Setup the log for RestClient calls.
-  # Value should be a logger but can can be stdout, stderr, or a filename.
-  # You can also configure logging by the environment variable RESTCLIENT_LOG.
-  def self.log= log
-    if log.is_a? String
-      warn "[warning] You should set the log with a logger"
-    end
-    @@log = create_log log
+  class ExecutionParams < Struct.new(:ExecutionParams, :http_method, :url, :headers, :payload);
   end
 
-  def self.version
-    version_path = File.dirname(__FILE__) + "/../VERSION"
-    return File.read(version_path).chomp if File.file?(version_path)
-    "0.0.0"
+  @@before_execution_procs = []
+
+  # Add a Proc to be called before each request in executed
+  def self.add_before_execution_proc &proc
+    @@before_execution_procs << proc
+  end
+
+  def self.before_execution_procs # :nodoc:
+    @@before_execution_procs
+  end
+
+  @@after_execution_procs = []
+
+  # Add a Proc to be called before each request in executed
+  def self.add_after_execution_proc &proc
+    @@after_execution_procs << proc
+  end
+
+  def self.after_execution_procs # :nodoc:
+    @@after_execution_procs
   end
 
   # Create a log that respond to << like a logger
@@ -126,6 +135,7 @@ module RestClient
         else
           file_logger = Class.new do
             attr_writer :target_file
+
             def << obj
               File.open(@target_file, 'a') { |f| f.puts obj }
             end
@@ -140,9 +150,44 @@ module RestClient
     end
   end
 
+  @@log = nil
+
   @@env_log = create_log ENV['RESTCLIENT_LOG']
 
-  @@log = nil
+  add_before_execution_proc do |request|
+    if @@env_log || @@log
+      out = []
+      out << "RestClient.#{request.http_method} #{request.url.inspect}"
+      out << request.payload.short_inspect if request.payload
+      out << request.headers.inspect.gsub(/^\{/, '').gsub(/\}$/, '')
+      (@@env_log || @@log) << out.join(', ')
+    end
+  end
+
+  add_after_execution_proc do |response, raw_response|
+    if @@env_log || @@log
+      size = raw_response ? File.size(response.file.path) : response.size
+      (@@env_log || @@log) << "# => #{response.code} #{response.class.to_s.gsub(/^Net::HTTP/, '')} | #{(response['Content-type'] || '').gsub(/;.*$/, '')} #{size} bytes"
+    end
+  end
+
+  # Setup the log for RestClient calls.
+  # Value should be a logger but can can be stdout, stderr, or a filename.
+  # You can also configure logging by the environment variable RESTCLIENT_LOG.
+  def self.log= log
+    if log.is_a? String
+      warn "[warning] You should set the log with a logger"
+    end
+    unless @@env_log
+      @@log = create_log log
+    end
+  end
+
+  def self.version
+    version_path = File.dirname(__FILE__) + "/../VERSION"
+    return File.read(version_path).chomp if File.file?(version_path)
+    "0.0.0"
+  end
 
   def self.log # :nodoc:
     @@env_log || @@log

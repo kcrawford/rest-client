@@ -49,6 +49,12 @@ module RestClient
     end
 
     def execute
+      params = ExecutionParams.new method, url, processed_headers, payload
+
+      RestClient.before_execution_procs.each do |block|
+        params = block.call(params) || params
+      end
+
       execute_inner
     rescue Redirect => e
       @url = e.url
@@ -148,20 +154,23 @@ module RestClient
       net.read_timeout = @timeout if @timeout
       net.open_timeout = @open_timeout if @open_timeout
 
-      log_request
-
       net.start do |http|
         res = http.request(req, payload) { |http_response| fetch_body(http_response) }
         result = process_result(res)
-        log_response res
 
         if result.kind_of?(String) or @method == :head
-          Response.new(result, res)
+          response = Response.new(result, res)
         elsif @raw_response
-          RawResponse.new(@tf, res)
+          response = RawResponse.new(@tf, res)
         else
-          Response.new(nil, res)
+          response = Response.new(nil, res)
         end
+
+        RestClient.after_execution_procs.each do |block|
+          block.call(response, @raw_response)
+        end
+
+        response
       end
     rescue EOFError
       raise RestClient::ServerBrokeConnection
@@ -235,23 +244,6 @@ module RestClient
         Zlib::Inflate.new.inflate(body)
       else
         body
-      end
-    end
-
-    def log_request
-      if RestClient.log
-        out = []
-        out << "RestClient.#{method} #{url.inspect}"
-        out << payload.short_inspect if payload
-        out << processed_headers.inspect.gsub(/^\{/, '').gsub(/\}$/, '')
-        RestClient.log << out.join(', ')
-      end
-    end
-
-    def log_response res
-      if RestClient.log
-        size = @raw_response ? File.size(@tf.path) : (res.body.nil? ? 0 : res.body.size)
-        RestClient.log << "# => #{res.code} #{res.class.to_s.gsub(/^Net::HTTP/, '')} | #{(res['Content-type'] || '').gsub(/;.*$/, '')} #{size} bytes"
       end
     end
 
