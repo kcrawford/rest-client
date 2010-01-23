@@ -1,0 +1,33 @@
+RestClient.put "http://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "http://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "http://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "http://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "http://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+RestClient.put "http://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "http://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "http://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "https://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "https://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "https://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "https://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "https://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "https://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "https://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "https://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+nil
+RestClient.put "https://some/resource", headers: {"Accept-encoding"=>"gzip, deflate", "Content-Length"=>"7", "Accept"=>"*/*; q=0.5, application/xml"}, paylod: "payload"
+# => 204 NoContent |  0 bytes
